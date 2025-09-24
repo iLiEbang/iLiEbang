@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PERDÓN BEBÉ</title>
+  <style>
+    :root{--bg:#ffb6c1;--card:#ffffff;--accent:#ff6b81;--muted:#666}
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{font-family:system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;display:flex;align-items:center;justify-content:center;background:var(--bg);margin:0;padding:20px;overflow:hidden;}
+    .card{position:relative;z-index:2;width:100%;max-width:760px;background:var(--card);border-radius:18px;padding:28px;box-shadow:0 10px 30px rgba(0,0,0,0.08);text-align:center}
+    .gif{max-width:260px;margin:0 auto 18px;border-radius:12px;overflow:hidden}
+    h1{font-size:20px;margin:8px 0 18px;color:#222}
+    .buttons{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+    .btn{display:inline-block;padding:12px 18px;border-radius:12px;text-decoration:none;font-weight:600;cursor:pointer;border:0}
+    .btn-si{background:linear-gradient(90deg,#6ee7b7,#34d399);color:#052e16}
+    .btn-no{background:transparent;border:2px solid #ffd1da;color:var(--accent)}
+
+    .shake{animation:shake .6s}
+    @keyframes shake{10%{transform:translateX(-6px)}30%{transform:translateX(6px)}50%{transform:translateX(-4px)}70%{transform:translateX(4px)}90%{transform:translateX(0)}}
+
+    .celebrate{font-size:18px;padding:20px;border-radius:12px;background:linear-gradient(90deg,#fffbe6,#fef3c7);margin-top:14px}
+
+    @media (max-width:520px){
+      h1{font-size:18px}
+      .btn{padding:10px 14px;font-size:14px}
+      .gif{max-width:180px}
+    }
+
+    /* Animación de panes cayendo */
+    .bread {position:fixed;top:-100px;width:60px;height:auto;z-index:1;animation:fall linear forwards;}
+    @keyframes fall {to {transform: translateY(110vh) rotate(360deg);opacity:1;}}
+  </style>
+  <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
+</head>
+<body>
+  <main class="card" role="main">
+    <div class="gif" id="gifContainer">
+      <!-- GIF inicial -->
+      <div class="tenor-gif-embed" data-postid="16593594498478021911" data-share-method="host" data-aspect-ratio="0.898396" data-width="100%">
+        <a href="https://tenor.com/view/cat-gif-16593594498478021911">Cat GIF</a>
+      </div>
+    </div>
+
+    <h1 id="question">¿Quieres que te pida perdón con todo mi ❤️?</h1>
+
+    <div class="buttons" id="buttons">
+      <button class="btn btn-si" id="yesBtn" aria-label="Sí">SI</button>
+      <button class="btn btn-no" id="noBtn" aria-label="No">NO</button>
+    </div>
+
+    <div id="resultArea" aria-live="polite"></div>
+  </main>
+
+  <script>
+    const prompts = [
+      '🥺🍓 Pastelito de caramelo y fresa con nata 🍰❤️... ¿me perdonas? 🙏💕',
+      '🤞👂💖 Prometo escuchar más y mirar a los ojos 👀✨ cuando hables — ¿me perdonas? 🥹💞',
+      '📝💌 Te escribo un poema malo 😅 pero con mucho corazón ❤️🔥. ¿Me perdonas? 🌹🥰',
+      '🥖💖 Te doy mi pan 🥯 y desayunas con él ☕🍳. ¿SÍ? 😍🥺',
+      '🎉💫 Haré esos planes que siempre quieres 👫💃🕺 — te dejo elegir todo el día 🗓️✨. ¿Me perdonas? 💕😇',
+      '🎁😍 Regalo sorpresa: una tarde solo para ti 🌸🌹 (sin fútbol ⚽🚫). ¿SÍ? 🥰💖',
+      '🙆‍♂️💞 Acepto que tú llevas razón hoy y mañana 📅✔️. ¿Me perdonas? 😘💖'
+    ];
+
+    const noGifs = [
+      "16593594498478021911",
+      "16191640636414798241",
+      "24073143",
+      "26542375",
+      "6227991838366394061",
+      "12723249893499432790",
+      "15136062980563764405",
+      "10141647709992578610",
+      "12389722786937243175",
+      "2542452689958021933",
+      "17863019",
+      "8523870683176515378"
+    ];
+
+    const yesGif = "12186015021689896619"; // besito catlove
+
+    let index = 0;
+    const questionEl = document.getElementById('question');
+    const yesBtn = document.getElementById('yesBtn');
+    const noBtn = document.getElementById('noBtn');
+    const resultArea = document.getElementById('resultArea');
+    const gifContainer = document.getElementById('gifContainer');
+
+    questionEl.textContent = prompts[index];
+
+    function setGif(postid){
+      gifContainer.innerHTML = `<div class="tenor-gif-embed" data-postid="${postid}" data-share-method="host" data-aspect-ratio="1" data-width="100%"></div>`;
+      window.__TENOR_LOADED = false;
+      if(window.Tenor){ Tenor.init(); }
+    }
+
+    noBtn.addEventListener('click', ()=>{
+      noBtn.classList.remove('shake');
+      void noBtn.offsetWidth;
+      noBtn.classList.add('shake');
+
+      index++;
+      if(index < prompts.length){
+        questionEl.textContent = prompts[index];
+        resultArea.innerHTML = '';
+      } else {
+        questionEl.textContent = '🌟✨ Tu paciencia merece un regalo... ¿me das otra oportunidad y dices SÍ? 💖🥹';
+        const extra = document.createElement('div');
+        extra.className = 'celebrate';
+        extra.innerHTML = '💝 Si sigues diciendo NO 🙅‍♀️, te haré 3 favores: 🤗 abrazo largo, 🍽️ cena hecha por mí y 🎬 peli elegida por ti 🍿💕';
+        resultArea.innerHTML = '';
+        resultArea.appendChild(extra);
+        index = prompts.length - 2;
+      }
+      const gifIndex = Math.floor(Math.random()*noGifs.length);
+      setGif(noGifs[gifIndex]);
+    });
+
+    yesBtn.addEventListener('click', ()=>{
+      questionEl.textContent = '🎉💖 ¡YAY! Gracias por darme otra oportunidad 🥰😍';
+      resultArea.innerHTML = '<div class="celebrate">✨ Prometo ser mejor 💪❤️. Te quiero mucho 💕 — ahora vamos a celebrarlo 🥳🎂🎶</div>';
+      setGif(yesGif);
+
+      const btns = document.getElementById('buttons');
+      btns.innerHTML = '<button class="btn btn-si" id="reset">🔄 Volver a empezar</button> <a class="btn" href="#" id="hug">🤗 Enviar un abrazo virtual</a>';
+
+      document.getElementById('reset').addEventListener('click', ()=>{
+        index = 0;
+        questionEl.textContent = prompts[index];
+        resultArea.innerHTML = '';
+        setGif(noGifs[0]);
+        btns.innerHTML = '';
+        btns.appendChild(yesBtn);
+        btns.appendChild(noBtn);
+      });
+
+      document.getElementById('hug').addEventListener('click', (e)=>{
+        e.preventDefault();
+        alert('🤗 Abrazo enviado 💌✨. Ahora dile a tu novia cuánto la quieres ❤️🥹.');
+      });
+    });
+
+    document.addEventListener('keydown',(e)=>{
+      if(e.key === 'y' || e.key === 'Y') yesBtn.click();
+      if(e.key === 'n' || e.key === 'N') noBtn.click();
+    });
+
+    // Generar panes cayendo 🥖
+    const breads = [
+      'https://pngimg.com/d/baguette_PNG26.png',
+      'https://pngimg.com/d/bread_PNG2348.png'
+    ];
+
+    function createBread(){
+      const bread = document.createElement('img');
+      bread.src = breads[Math.floor(Math.random()*breads.length)];
+      bread.className = 'bread';
+      bread.style.left = Math.random()*100 + 'vw';
+      bread.style.animationDuration = (3+Math.random()*5)+'s';
+      document.body.appendChild(bread);
+      setTimeout(()=>bread.remove(),8000);
+    }
+
+    setInterval(createBread,1200);
+  </script>
+</body>
+</html>
